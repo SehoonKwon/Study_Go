@@ -2,17 +2,26 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
 //여러개 반환도 가능
-func lenAndUpper(name string) (int, string) {
-	defer fmt.Println("I'm done") //함수가 return 된 후에 실행된다 defer!!
-	return len(name), strings.ToUpper(name)
+func superAdd(numbers ...int) int {
+	for index, number := range numbers {
+		fmt.Println(index, number)
+	}
+	return 1
+}
+
+func Add(numbers ...int) int {
+	total := 0
+	for i := 0; i < 5; i++ {
+		fmt.Println(i)
+		total += i
+	}
+	return total
 }
 
 func main() {
-
-	totalLenth, upperName := lenAndUpper("sehoon")
-	fmt.Println(totalLenth, upperName)
+	result := Add(1, 2, 3, 4)
+	fmt.Println(result)
 }
