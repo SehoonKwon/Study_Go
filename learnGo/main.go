@@ -3,11 +3,15 @@ package main
 import (
 	"fmt"
 
-	"Github.com/SehonKwon/learnGo/accounts"
+	"Github.com/SehonKwon/learnGo/mydict"
 )
 
 func main() {
-	account := accounts.NewAccount("Sehoon")
-	account.Deposit(10)
-	fmt.Println(account.String())
+	dictionary := mydict.Dictionary{"first": "Fisrt Word"}
+	definition, err := dictionary.Search("first")
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(definition)
+	}
 }
