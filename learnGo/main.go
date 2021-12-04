@@ -1,14 +1,18 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 )
 
-func main() {
+type requestResult struct {
+	url    string
+	status string
+}
 
-	var results = map[string]string{} //map 초기화방법, 2)는 make 사용하기
+func main() {
+	var results = map[string]string{}
+	c := make(chan requestResult)
 	urls := []string{
 		"https://github.com/SehoonKwon",
 		"http://www.samsungcareers.com/main.html",
@@ -16,26 +20,25 @@ func main() {
 	}
 
 	for _, url := range urls {
-		result := "OK"
-		err := hitURL(url)
-		if err != nil {
-			result = "Failed"
-		}
-		results[url] = result
+		go hitURL(url, c)
 	}
 
-	for url, result := range results {
-		fmt.Println(url, result)
+	for i := 0; i < len(urls); i++ {
+		result := <-c
+		results[result.url] = result.status
+	}
+
+	for url, status := range results {
+		fmt.Println(url, status)
 	}
 }
 
-var errRequestFailed = errors.New("Request failed")
-
-func hitURL(url string) error {
-	fmt.Println("Checking :", url)
+//chan<- == 이 함수는 send only라고 명시
+func hitURL(url string, c chan<- requestResult) {
 	resp, err := http.Get(url)
 	if err != nil || resp.StatusCode >= 400 {
-		return errRequestFailed
+		c <- requestResult{url: url, status: "Failed"}
+	} else {
+		c <- requestResult{url: url, status: "OK"}
 	}
-	return nil
 }
