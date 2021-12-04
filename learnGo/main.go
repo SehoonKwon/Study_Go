@@ -8,6 +8,7 @@ import (
 
 func main() {
 
+	var results = map[string]string{} //map 초기화방법, 2)는 make 사용하기
 	urls := []string{
 		"https://github.com/SehoonKwon",
 		"http://www.samsungcareers.com/main.html",
@@ -15,7 +16,16 @@ func main() {
 	}
 
 	for _, url := range urls {
-		hitURL(url)
+		result := "OK"
+		err := hitURL(url)
+		if err != nil {
+			result = "Failed"
+		}
+		results[url] = result
+	}
+
+	for url, result := range results {
+		fmt.Println(url, result)
 	}
 }
 
