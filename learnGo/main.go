@@ -1,23 +1,31 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-
-	"Github.com/SehonKwon/learnGo/mydict"
+	"net/http"
 )
 
 func main() {
-	dictionary := mydict.Dictionary{"first": "Fisrt Word"}
-	word := "hello"
-	definition := "Greeting"
-	err := dictionary.Add(word, definition)
-	if err != nil {
-		fmt.Println(err)
+
+	urls := []string{
+		"https://github.com/SehoonKwon",
+		"http://www.samsungcareers.com/main.html",
+		"https://www.naver.com",
 	}
-	hello, err := dictionary.Search(word)
-	fmt.Println(hello)
-	err2 := dictionary.Add(word, definition)
-	if err2 != nil {
-		fmt.Println(err2)
+
+	for _, url := range urls {
+		hitURL(url)
 	}
+}
+
+var errRequestFailed = errors.New("Request failed")
+
+func hitURL(url string) error {
+	fmt.Println("Checking :", url)
+	resp, err := http.Get(url)
+	if err != nil || resp.StatusCode >= 400 {
+		return errRequestFailed
+	}
+	return nil
 }
